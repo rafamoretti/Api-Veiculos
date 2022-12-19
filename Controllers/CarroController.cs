@@ -1,5 +1,6 @@
 using ApiVeiculos.Context;
 using ApiVeiculos.Model;
+using ApiVeiculos.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,19 +20,32 @@ namespace ApiVeiculos.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Carro>> Get()
         {
-            var carros = _context.Carros.ToList();
+            var repository = new CarroRepository(_context);
+            var carros = repository.GetAll();
 
-            if (carros == null || carros.Count == 0)
-                BadRequest();
+            if (carros == null || carros.Count() == 0)
+                return NotFound("Nenhum carro encontrado");
 
             return Ok(carros);
+        }
+
+        [HttpGet("carro/{id:int}")]
+        public ActionResult GetById(int id)
+        {
+            var repository = new CarroRepository(_context);
+            var carro = repository.GetById(id);
+
+            if (carro == null)
+                return NotFound("Nenhum carro encontrado");
+
+            return Ok(carro);
         }
 
         [HttpPost]
         public ActionResult Post(Carro carro)
         {
-            _context.Carros.Add(carro);
-            _context.SaveChanges();
+            var repository = new CarroRepository(_context);
+            repository.Add(carro);
 
             return Ok();
         }
@@ -39,9 +53,8 @@ namespace ApiVeiculos.Controllers
         [HttpPut]
         public ActionResult Put(Carro carro)
         {
-            _context.Carros.Entry(carro).State = EntityState.Modified;
-            _context.Carros.Update(carro);
-            _context.SaveChanges();
+            var repository = new CarroRepository(_context);
+            repository.Update(carro);
 
             return Ok(carro);
         }
@@ -49,15 +62,12 @@ namespace ApiVeiculos.Controllers
         [HttpDelete]
         public ActionResult Delete(int id)
         {
-            var carro = _context.Carros.FirstOrDefault(carro => carro.CarroId == id);
+            var repository = new CarroRepository(_context);
+            var carro = repository.GetById(id);
+            
+            repository.Delete(id);
 
-            if (carro == null)
-                return BadRequest();
-
-            _context.Carros.Remove(carro);
-            _context.SaveChanges();
-
-            return Ok(carro);
+            return Ok();
         }
     }
 }

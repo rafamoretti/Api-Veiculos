@@ -1,5 +1,6 @@
 using ApiVeiculos.Context;
 using ApiVeiculos.Model;
+using ApiVeiculos.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,19 +20,32 @@ namespace ApiVeiculos.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Moto>> Get()
         {
-            var motos = _context.Motos.ToList();
+            var repository = new MotoRepository(_context);
+            var motos = repository.GetAll();
 
-            if (motos == null || motos.Count == 0)
-                BadRequest();
+            if (motos == null || motos.Count() == 0)
+                return NotFound("Nenhuma moto encontrado");
 
             return Ok(motos);
+        }
+
+        [HttpGet("moto/{id:int}")]
+        public ActionResult GetById(int id)
+        {
+            var repository = new MotoRepository(_context);
+            var moto = repository.GetById(id);
+
+            if (moto == null)
+                return NotFound("Nenhuma moto encontrado");
+
+            return Ok(moto);
         }
 
         [HttpPost]
         public ActionResult Post(Moto moto)
         {
-            _context.Motos.Add(moto);
-            _context.SaveChanges();
+            var repository = new MotoRepository(_context);
+            repository.Add(moto);
 
             return Ok();
         }
@@ -39,25 +53,19 @@ namespace ApiVeiculos.Controllers
         [HttpPut]
         public ActionResult Put(Moto moto)
         {
-            _context.Motos.Entry(moto).State = EntityState.Modified;
-            _context.Motos.Update(moto);
-            _context.SaveChanges();
+            var repository = new MotoRepository(_context);
+            repository.Update(moto);
 
             return Ok(moto);
         }
 
-        [HttpDelete]
+        [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
-            var moto = _context.Motos.FirstOrDefault(moto => moto.MotoId == id);
+            var repository = new MotoRepository(_context);
+            repository.Delete(id);
 
-            if (moto == null)
-                return BadRequest();
-
-            _context.Motos.Remove(moto);
-            _context.SaveChanges();
-
-            return Ok(moto);
+            return Ok();
         }
     }
 }
