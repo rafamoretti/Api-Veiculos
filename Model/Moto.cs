@@ -38,13 +38,5 @@ namespace ApiVeiculos.Model
         {
             return this.Quilometros / quantidadeCombustivel;
         }
-
-        public bool VerificaPrazoRevisao()
-        {
-            if (DateTime.Now.Date > DataRevisao)
-                return true;
-
-            return false;
-        }
     }
 }
