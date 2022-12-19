@@ -3,6 +3,7 @@ using System;
 using ApiVeiculos.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiVeiculos.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221219224322_AddBaseClass")]
+    partial class AddBaseClass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.1");
@@ -31,9 +34,6 @@ namespace ApiVeiculos.Migrations
 
                     b.Property<string>("Fabricante")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("LitrosCombustivel")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Placa")
                         .HasColumnType("TEXT");
@@ -63,9 +63,6 @@ namespace ApiVeiculos.Migrations
 
                     b.Property<string>("Fabricante")
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("LitrosCombustivel")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("MaterialQuadro")
                         .HasColumnType("TEXT");

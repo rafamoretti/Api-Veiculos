@@ -15,7 +15,7 @@ namespace ApiVeiculos.Model
             this.Endereco = endereco;
         }
 
-        public bool VerificaPrazoRevisao(Carro carro)
+        public bool VerificaPrazoRevisao(VeiculoMotorizado carro)
         {
             if (DateTime.Now.Date > carro.DataRevisao)
                 return true;
