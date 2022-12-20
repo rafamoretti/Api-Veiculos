@@ -26,7 +26,7 @@ namespace ApiVeiculos.Repository
 
         public Carro GetById(int id)
         {
-            return _context.Carros.FirstOrDefault(carro => carro.CarroId == id);
+            return _context.Carros.FirstOrDefault(carro => carro.VeiculoId == id);
         }
 
         public void Update(Carro Carro)
