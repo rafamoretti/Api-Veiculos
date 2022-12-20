@@ -7,5 +7,10 @@ namespace ApiVeiculos.Model
         public int QuantidadeLugares { get; set; }
         public string Placa { get; set; }
         public DateTime DataRevisao { get; set; }
+
+        public void LigarLimpadordeVidros()
+        {
+            //TODO: Exemplificar LSP;
+        }
     }
 }
