@@ -2,7 +2,7 @@ using ApiVeiculos.Model.Interfaces;
 
 namespace ApiVeiculos.Model
 {
-    public class Concessionaria
+    public class Concessionaria : ICalculadorDeImposto
     {
         public string Nome { get; private set; }
         public string Endereco { get; private set; }
@@ -23,6 +23,12 @@ namespace ApiVeiculos.Model
                 return true;
 
             return false;
+        }
+
+        public double CalculaIPVA()
+        {
+            //TODO: Exemplificar ISP
+            return 1.0;
         }
     }
 }
