@@ -1,3 +1,5 @@
+using ApiVeiculos.Model.Interfaces;
+
 namespace ApiVeiculos.Model
 {
     public class Concessionaria
@@ -15,9 +17,9 @@ namespace ApiVeiculos.Model
             this.Endereco = endereco;
         }
 
-        public bool VerificaPrazoRevisao(VeiculoMotorizado carro)
+        public bool VerificaPrazoRevisao(IRegistravel veiculo)
         {
-            if (DateTime.Now.Date > carro.DataRevisao)
+            if (DateTime.Now.Date > veiculo.DataRevisao)
                 return true;
 
             return false;

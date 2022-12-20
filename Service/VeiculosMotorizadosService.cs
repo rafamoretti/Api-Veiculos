@@ -1,4 +1,5 @@
 using ApiVeiculos.Model;
+using ApiVeiculos.Model.Interfaces;
 
 namespace ApiVeiculos.Services
 {
@@ -9,7 +10,7 @@ namespace ApiVeiculos.Services
             return veiculo.QuilometragemPorLitro();
         }
 
-        public bool VerificaRevisao(VeiculoMotorizado veiculo)
+        public bool VerificaRevisao(IRegistravel veiculo)
         {
             var concessionaria = new Concessionaria();
             return concessionaria.VerificaPrazoRevisao(veiculo);
