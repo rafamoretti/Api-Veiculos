@@ -63,7 +63,9 @@ namespace ApiVeiculos.Controllers
         public ActionResult Delete(int id)
         {
             var repository = new MotoRepository(_context);
-            repository.Delete(id);
+            var moto = repository.GetById(id);
+            
+            repository.Delete(moto);
 
             return Ok();
         }

@@ -38,5 +38,10 @@ namespace ApiVeiculos.Repository
             _context.Entry(entity).State = EntityState.Modified;
             _context.Set<T>().Update(entity);
         }
+
+        public void Save()
+        {
+            _context.SaveChanges();
+        }
     }
 }

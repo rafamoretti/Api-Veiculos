@@ -46,7 +46,6 @@ namespace ApiVeiculos.Controllers
             return Ok(quilometros);
         }
 
-
         [HttpGet("carro/{id:int}")]
         public ActionResult GetById(int id)
         {
@@ -83,7 +82,7 @@ namespace ApiVeiculos.Controllers
             var repository = new CarroRepository(_context);
             var carro = repository.GetById(id);
             
-            repository.Delete(id);
+            repository.Delete(carro);
 
             return Ok();
         }
