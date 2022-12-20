@@ -46,6 +46,15 @@ namespace ApiVeiculos.Controllers
             return Ok(quilometros);
         }
 
+        [HttpGet("lugares/{id:int}")]
+        public ActionResult GetQuantidadeDeLugares(int id)
+        {
+            var repository = new CarroRepository(_context);
+            var lugares = repository.GetQuantidadeDeLugares(id);
+
+            return Ok(lugares);
+        }
+
         [HttpGet("carro/{id:int}")]
         public ActionResult GetById(int id)
         {

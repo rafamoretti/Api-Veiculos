@@ -16,11 +16,13 @@ namespace ApiVeiculos.Repository
         public void Add(T entity)
         {
             _context.Set<T>().Add(entity);
+            Save();
         }
 
         public void Delete(T entity)
         {
             _context.Set<T>().Remove(entity);
+            Save();
         }
 
         public IEnumerable<T> GetAll()
@@ -37,6 +39,7 @@ namespace ApiVeiculos.Repository
         {
             _context.Entry(entity).State = EntityState.Modified;
             _context.Set<T>().Update(entity);
+            Save();
         }
 
         public void Save()
