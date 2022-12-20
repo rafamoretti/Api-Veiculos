@@ -1,6 +1,7 @@
 using ApiVeiculos.Context;
 using ApiVeiculos.Model;
 using ApiVeiculos.Repository;
+using ApiVeiculos.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,6 +29,23 @@ namespace ApiVeiculos.Controllers
 
             return Ok(carros);
         }
+
+        [HttpGet("quilometros/{id:int}")]
+        public ActionResult GetQuilometros(int id)
+        {
+            var service = new VeiculosMotorizadosService();
+            var repository = new CarroRepository(_context);
+
+            var carro = repository.GetById(id);
+
+            var quilometros = new 
+            {
+                Km = service.VerificaQuilometragemPorLitro(carro),
+            };
+            
+            return Ok(quilometros);
+        }
+
 
         [HttpGet("carro/{id:int}")]
         public ActionResult GetById(int id)
