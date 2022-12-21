@@ -6,9 +6,4 @@ namespace ApiVeiculos.Repository.Interfaces
     {
         int GetQuantidadeDeLugares(int id);
     }
-
-    public interface IMotoRepository : IRepository<Moto>
-    {
-        string GetMaterialQuadro(int id);
-    }
 }
