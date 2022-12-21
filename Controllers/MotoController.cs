@@ -16,9 +16,11 @@ namespace ApiVeiculos.Controllers
         private readonly IVeiculosMotorizadosService _veiculosMotorizadosService;
         private readonly IVeiculosRegistraveisService _veiculosRegistraveisService;
 
-        public MotoController(IMotoRepository repository)
+        public MotoController(IMotoRepository repository, IVeiculosMotorizadosService veiculosMotorizadosService, IVeiculosRegistraveisService veiculosRegistraveisService)
         {
             _repository = repository;
+            _veiculosMotorizadosService = veiculosMotorizadosService;
+            _veiculosRegistraveisService = veiculosRegistraveisService;
         }
 
         [HttpGet]
