@@ -1,6 +1,8 @@
 using ApiVeiculos.Context;
 using ApiVeiculos.Model;
 using ApiVeiculos.Repository;
+using ApiVeiculos.Repository.Interfaces;
+using ApiVeiculos.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,18 +12,19 @@ namespace ApiVeiculos.Controllers
     [Route("[controller]")]
     public class MotoController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly IMotoRepository _repository;
+        private readonly IVeiculosMotorizadosService _veiculosMotorizadosService;
+        private readonly IVeiculosRegistraveisService _veiculosRegistraveisService;
 
-        public MotoController(AppDbContext context)
+        public MotoController(IMotoRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Moto>> Get()
         {
-            var repository = new MotoRepository(_context);
-            var motos = repository.GetAll();
+            var motos = _repository.GetAll();
 
             if (motos == null || motos.Count() == 0)
                 return NotFound("Nenhuma moto encontrado");
@@ -32,8 +35,7 @@ namespace ApiVeiculos.Controllers
         [HttpGet("moto/{id:int}")]
         public ActionResult GetById(int id)
         {
-            var repository = new MotoRepository(_context);
-            var moto = repository.GetById(id);
+            var moto = _repository.GetById(id);
 
             if (moto == null)
                 return NotFound("Nenhuma moto encontrado");
@@ -41,11 +43,36 @@ namespace ApiVeiculos.Controllers
             return Ok(moto);
         }
 
+        [HttpGet("quilometros/{id:int}")]
+        public ActionResult GetQuilometros(int id)
+        {
+            var moto = _repository.GetById(id);
+
+            var quilometros = new
+            {
+                Km = _veiculosMotorizadosService.VerificaQuilometragemPorLitro(moto),
+            };
+
+            return Ok(quilometros);
+        }
+
+        [HttpGet("revisao/{id:int}")]
+        public ActionResult GetRevisao(int id)
+        {
+            var moto = _repository.GetById(id);
+
+            var revisao = new
+            {
+                verificacaoRevisao = _veiculosRegistraveisService.VerificaRevisao(moto),
+            };
+
+            return Ok(revisao);
+        }
+
         [HttpPost]
         public ActionResult Post(Moto moto)
         {
-            var repository = new MotoRepository(_context);
-            repository.Add(moto);
+            _repository.Add(moto);
 
             return Ok();
         }
@@ -53,8 +80,7 @@ namespace ApiVeiculos.Controllers
         [HttpPut]
         public ActionResult Put(Moto moto)
         {
-            var repository = new MotoRepository(_context);
-            repository.Update(moto);
+            _repository.Update(moto);
 
             return Ok(moto);
         }
@@ -62,10 +88,9 @@ namespace ApiVeiculos.Controllers
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
-            var repository = new MotoRepository(_context);
-            var moto = repository.GetById(id);
-            
-            repository.Delete(moto);
+            var moto = _repository.GetById(id);
+
+            _repository.Delete(moto);
 
             return Ok();
         }

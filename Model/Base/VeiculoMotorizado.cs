@@ -8,7 +8,7 @@ namespace ApiVeiculos.Model
 
         public double QuilometragemPorLitro()
         {
-            return base.Quilometros / this.LitrosCombustivel;
+            return this.Quilometros / this.LitrosCombustivel;
         }
     }
 }

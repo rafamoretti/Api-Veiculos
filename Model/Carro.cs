@@ -8,7 +8,7 @@ namespace ApiVeiculos.Model
         public string Placa { get; set; }
         public DateTime DataRevisao { get; set; }
 
-        public void LigarLimpadordeVidros()
+        public void AbrirCapo()
         {
             //TODO: Exemplificar LSP;
         }

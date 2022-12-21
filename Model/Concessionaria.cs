@@ -25,7 +25,7 @@ namespace ApiVeiculos.Model
             return false;
         }
 
-        public double CalculaIPVA()
+        public double CalculaIPVA(IRegistravel veiculo)
         {
             //TODO: Exemplificar ISP
             return 1.0;

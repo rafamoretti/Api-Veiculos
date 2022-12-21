@@ -1,6 +1,7 @@
 using ApiVeiculos.Context;
 using ApiVeiculos.Model;
 using ApiVeiculos.Repository;
+using ApiVeiculos.Repository.Interfaces;
 using ApiVeiculos.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,18 +12,21 @@ namespace ApiVeiculos.Controllers
     [Route("[controller]")]
     public class CarroController : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly ICarroRepository _repository;
+        private readonly IVeiculosMotorizadosService _veiculosMotorizadosService;
+        private readonly IVeiculosRegistraveisService _veiculosRegistraveisService;
 
-        public CarroController(AppDbContext context)
+        public CarroController(ICarroRepository repository, IVeiculosMotorizadosService veiculosMotorizadosService, IVeiculosRegistraveisService veiculosRegistraveisService)
         {
-            _context = context;
+            _repository = repository;
+            _veiculosMotorizadosService = veiculosMotorizadosService;
+            _veiculosRegistraveisService = veiculosRegistraveisService;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Carro>> Get()
         {
-            var repository = new CarroRepository(_context);
-            var carros = repository.GetAll();
+            var carros = _repository.GetAll();
 
             if (carros == null || carros.Count() == 0)
                 return NotFound("Nenhum carro encontrado");
@@ -33,24 +37,33 @@ namespace ApiVeiculos.Controllers
         [HttpGet("quilometros/{id:int}")]
         public ActionResult GetQuilometros(int id)
         {
-            var service = new VeiculosMotorizadosService();
-            var repository = new CarroRepository(_context);
-
-            var carro = repository.GetById(id);
+            var carro = _repository.GetById(id);
 
             var quilometros = new 
             {
-                Km = service.VerificaQuilometragemPorLitro(carro),
+                Km = _veiculosMotorizadosService.VerificaQuilometragemPorLitro(carro),
             };
             
             return Ok(quilometros);
         }
 
+        [HttpGet("revisao/{id:int}")]
+        public ActionResult GetRevisao(int id)
+        {
+            var carro = _repository.GetById(id);
+
+            var revisao = new
+            {
+                verificacaoRevisao = _veiculosRegistraveisService.VerificaRevisao(carro),
+            };
+
+            return Ok(revisao);
+        }
+
         [HttpGet("lugares/{id:int}")]
         public ActionResult GetQuantidadeDeLugares(int id)
         {
-            var repository = new CarroRepository(_context);
-            var lugares = repository.GetQuantidadeDeLugares(id);
+            var lugares = _repository.GetQuantidadeDeLugares(id);
 
             return Ok(lugares);
         }
@@ -58,8 +71,7 @@ namespace ApiVeiculos.Controllers
         [HttpGet("carro/{id:int}")]
         public ActionResult GetById(int id)
         {
-            var repository = new CarroRepository(_context);
-            var carro = repository.GetById(id);
+            var carro = _repository.GetById(id);
 
             if (carro == null)
                 return NotFound("Nenhum carro encontrado");
@@ -70,17 +82,14 @@ namespace ApiVeiculos.Controllers
         [HttpPost]
         public ActionResult Post(Carro carro)
         {
-            var repository = new CarroRepository(_context);
-            repository.Add(carro);
-
+            _repository.Add(carro);
             return Ok();
         }
 
         [HttpPut]
         public ActionResult Put(Carro carro)
         {
-            var repository = new CarroRepository(_context);
-            repository.Update(carro);
+            _repository.Update(carro);
 
             return Ok(carro);
         }
@@ -88,10 +97,8 @@ namespace ApiVeiculos.Controllers
         [HttpDelete]
         public ActionResult Delete(int id)
         {
-            var repository = new CarroRepository(_context);
-            var carro = repository.GetById(id);
-            
-            repository.Delete(carro);
+            var carro = _repository.GetById(id);
+            _repository.Delete(carro);
 
             return Ok();
         }
